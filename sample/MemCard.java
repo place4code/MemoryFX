@@ -16,10 +16,10 @@ public class MemCard extends Button {
     //#################################################################
     //#########################################      Constructor:
 
-    public MemCard(int imgID, String frontSrc) {
+    public MemCard(String frontSrc, int imgID) {
         this.imgID = imgID;
-        front = new ImageView(frontSrc);
-        back = new ImageView(""); //rückseite der Karte
+        front = new ImageView(String.valueOf(getClass().getResource(frontSrc)));
+        back = new ImageView(String.valueOf(getClass().getResource("images/back.jpg"))); //rückseite der Karte
         setGraphic(back);
         available = true;
         reversed = false;
@@ -32,7 +32,7 @@ public class MemCard extends Button {
     public void showBack(boolean removeFromGame) {
         // 2 Karten wurden gefunden?
         if (removeFromGame) {
-            setGraphic(new ImageView("")); // Wenn die Karte entfernt wurde
+            setGraphic(new ImageView("images/removed.jpg")); // Wenn die Karte entfernt wurde
             available = false; // Die Karte wird nicht mehr verfügbar
         } else {
             //Wenn die Karte nich im Spiel ist, zeigt die Rückseite und setzt umgedreht auf false
