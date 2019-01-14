@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -27,7 +28,7 @@ public class MemField {
 
     private int cardsTurned; // Wie viele Karten sind umgedreht
 
-    private MemCard[] currentPair;
+    private MemCard[] pair;
 
     private int player;
 
@@ -42,7 +43,7 @@ public class MemField {
         myScore = 0;
         computerScore = 0;
         cardsTurned = 0;
-        currentPair = new MemCard[2];
+        pair = new MemCard[2];
         player = 0; // 0 = Mensch
         cardsPosition = new int[2][21];
 
@@ -79,11 +80,63 @@ public class MemField {
     private void drawCards(FlowPane field) {
         int count = 0;
         for (int i = 0; i <= 41; i++) {
-            card[i] = new MemCard(images[count], i);
+            // ID's sind wegen count doppelt
+            card[i] = new MemCard(images[count], count, this); // COUNT sondern i !!!
             if ((i+1) % 2 == 0) count++;
-            field.getChildren().add(card[i]);
+            field.getChildren().add(card[i]); // Karte hinzufügen
             card[i].setPosition(i);
         }
     }
 
+
+    public void showCard(MemCard memCard) {
+
+        int cardID = memCard.getCardID();
+        int position = memCard.getPosition();
+
+        pair[cardsTurned] = memCard; // cards Turned: 0,1
+
+        System.out.println(cardID);
+
+
+        if (cardsPosition[0][cardID] == -1) { // wenn noch kein Eintrag ist.
+            cardsPosition[0][cardID] = position;
+        } else if (cardsPosition[0][cardID] != position) { // zwei ID's aber ungleiche positions
+            cardsPosition[1][cardID] = position;
+        }
+
+        cardsTurned++;
+
+        if (cardsTurned == 2) {
+            checkPair(cardID); // Karten prüfen
+            turn(); //die Karten wieder umdrehen
+        }
+
+        if (computerScore + myScore == 21) {
+            Platform.exit();
+        }
+
+    }
+
+    //die Methode dreht die Karte wieder auf die Rückseite, oder nimmt sie aus dem Speil
+    private void turn() {
+        System.out.println("turn");
+        cardsTurned = 0;
+    }
+
+    private void checkPair(int cardID) {
+        if (pair[0].getCardID() == pair[1].getCardID()) {
+            System.out.println("pair[0].getCardID() == pair[1].getCardID()");
+            found();
+
+            cardsPosition[0][cardID] = -2;
+            cardsPosition[1][cardID] = -2;
+        }
+    }
+
+    private void found() {
+        System.out.println("found");
+        if (player == 0) myScoreLabel.setText(Integer.toString(++myScore));
+        else computerScoreLabel.setText(Integer.toString(++computerScore));
+    }
 }

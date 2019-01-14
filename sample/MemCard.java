@@ -7,17 +7,19 @@ import javafx.scene.image.ImageView;
 
 public class MemCard extends Button {
 
-    private int imgID;
+    private int cardID;
     private ImageView front, back;
     private int position;
     private boolean reversed; //Ist die Karte umgedreht?
     private boolean available; //Ist die Karte noch im Spiel?
+    private MemField field;
 
     //#################################################################
     //#########################################      Constructor:
 
-    public MemCard(String frontSrc, int imgID) {
-        this.imgID = imgID;
+    public MemCard(String frontSrc, int cardID, MemField field) {
+        this.cardID = cardID;
+        this.field = field;
         front = new ImageView(String.valueOf(getClass().getResource(frontSrc)));
         back = new ImageView(String.valueOf(getClass().getResource("images/back.jpg"))); //rückseite der Karte
         setGraphic(back);
@@ -44,8 +46,8 @@ public class MemCard extends Button {
     //#################################################################
     //#########################################      Set/Getters:
 
-    public int getImgID() {
-        return imgID;
+    public int getCardID() {
+        return cardID;
     }
 
     public int getPosition() {
@@ -71,6 +73,7 @@ public class MemCard extends Button {
             if (!reversed) {
                 setGraphic(front);
                 reversed = true;
+                field.showCard(MemCard.this); // wenn ich nur this übergebe, übergebe ich eine Instanz von Listener, nicht MemCard
             }
         }
     }
