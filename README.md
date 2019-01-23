@@ -1,4 +1,4 @@
-# MemoryFX
+# MemoryFX (In progress...)
 
 ![N|Solid](http://place4code.com/img-git/memory.jpg)
 
